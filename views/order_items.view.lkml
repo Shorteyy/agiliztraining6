@@ -67,9 +67,39 @@ view: order_items {
   measure: total_sale_price {
     type: sum
     sql: ${sale_price} ;;  }
+
+  measure: max_sale_price {
+    type: max
+    sql: ${sale_price} ;;  }
   measure: average_sale_price {
     type: average
     sql: ${sale_price} ;;  }
+
+  measure: sales_agregation {
+    label_from_parameter: sales_price_agregation
+    type: number
+    sql:
+      {% parameter sales_price_agregation%}(${sale_price});;
+    value_format: "€#,##0"
+  }
+
+  parameter: sales_price_agregation {
+    label: "sales price"
+    type: unquoted
+    allowed_value: {
+      label: "Total sales price"
+      value: "SUM"
+    }
+    allowed_value: {
+      label: "Max sales price"
+      value: "MAX"
+    }
+    allowed_value: {
+      label: "Average sales price"
+      value: "AVG"
+    }
+    default_value: "SUM"
+  }
 
   dimension_group: shipped {
     type: time
@@ -95,16 +125,16 @@ view: order_items {
   # ----- Sets of fields for drilling ------
   set: detail {
     fields: [
-	id,
-	users.last_name,
-	users.id,
-	users.first_name,
-	inventory_items.id,
-	inventory_items.product_name,
-	products.name,
-	products.id,
-	orders.order_id
-	]
+  id,
+  users.last_name,
+  users.id,
+  users.first_name,
+  inventory_items.id,
+  inventory_items.product_name,
+  products.name,
+  products.id,
+  orders.order_id
+  ]
   }
 
 }
